@@ -3,7 +3,7 @@ plugin.tx_dixxingsync_pi1 {
 	loginPid = 21
 	tables {
 		# table.convert.col = function
-		fe_users.convert.city = xing_birthdate
+		# example that would convert the value of city with the function "birth_date": fe_users.convert.city = xing_birthdate
 		
 		# convert beim parsen, convert_import erst beim import
 		fe_users.convert_import.image = file
