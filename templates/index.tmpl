@@ -1,0 +1,79 @@
+{if $values.error == 'nologin'}
+	{typolink parameter=$conf.loginPid}Bitte zuerst mit Xing einloggen{/typolink}
+{elseif $values.error == 'hijacking'}
+	Sicherheitsabfrage gegen Hijacking fehlgeschlagen
+{else}
+	<h3>Gegenüberstellung der Xing Werte mit den lokal gespeicherten Werten</h3>
+	<form method="post" action="{$formaction}">
+		{assign var=table value='fe_users'}
+		<h4>{translate label="table.`$table`"}{$table}{/translate}</h4>
+		<table border="1">
+			<tr>
+				<th></th>
+				<th>Feld</th>
+				<th>Xing</th>
+				<th>TYPO3</th>
+			</tr>
+			{foreach from=$values.mappedData.$table item=detail key=i}
+				<tr>
+					<td><input type="checkbox" name="{$prefix}[import_feuser][]" value="{$i|escape}" /></td>
+					<td>{field table=$table col=$i mode="label"}</td>
+					<td>
+						{if $i == 'image'} <!-- Ausnahme für Spalte "fe_users.image" --><img src="{$detail|escape}" />{/if}
+						{field table=$table col=$i mode="read" value=$detail}
+					</td>
+					<td>{field table=$table col=$i mode="read" value=$fe_user.$i}</td>
+				</tr>
+			{/foreach}
+		</table>
+
+
+		{foreach from=$values.mappedData.foreign item=mapping key=table}
+			<h4>{translate label="table.`$table`"}{$table}{/translate}</h4>
+			
+			<table border="1">
+				<tr>
+					<th>Xing</th>
+					<th>TYPO3</th>
+				</tr>
+				<tr>
+					<td>
+						{foreach from=$mapping item=detail key=i}
+							<table border="1">
+								<td colspan="2">
+									<input type="checkbox" name="{$prefix}[import_table][{$table|escape}][]" value="{$i|escape}" /> Übernehmen
+								</td>
+								{foreach from=$detail item=val key=col}
+									<tr>
+										<td>{field table=$table col=$col mode="label"}</td>
+										<td>{field table=$table col=$col mode="read" value=$val}</td>
+									</tr>
+								{/foreach}
+							</table>
+						{/foreach}
+					</td>
+
+					<td>
+						{foreach from=$values.usertables.$table item=detail key=i}
+							<table border="1">
+								<tr>
+									<td colspan="2">
+										<input type="checkbox" name="{$prefix}[delete_table][{$table|escape}][]" value="{$detail.uid|escape}" /> Löschen
+									</td>
+								</tr>
+								{foreach from=$mapping.0 item=val key=col}{*foreach from=$detail item=val key=col*}
+									<tr>
+										<td>{field table=$table col=$col mode="label"}</td>
+										<td>{field table=$table col=$col mode="read" value=$detail.$col}</td>
+									</tr>
+								{/foreach}
+							</table>
+						{/foreach}
+					</td>
+				</tr>
+			</table>
+		{/foreach}
+		<input type="hidden" name="{$prefix}[action]" value="import" />
+		<input type="submit" value="Übernehmen" />
+	</form>
+{/if}

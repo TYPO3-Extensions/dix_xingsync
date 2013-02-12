@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<T3locallang>
+	<meta type="array">
+		<type>database</type>
+		<description>Language labels for templates belonging to extension 'dix_xingsync'</description>
+	</meta>
+	<data type="array">
+		<languageKey index="default" type="array">
+			<label index="table.fe_users">FE User</label>
+			<label index="table.tx_wmdbbamembercareer_experience">Experience</label>
+			<label index="table.tx_wmdbbamembercareer_training">Training</label>
+
+		</languageKey>
+	</data>
+</T3locallang>
