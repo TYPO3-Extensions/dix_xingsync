@@ -187,7 +187,7 @@ class tx_dixxingsync_Data {
 	}
 	
 	/* Convert the Xing Date given in format 2005-12 into a unix timestamp */
-	private function convert_xing_date_year_month($val, $table, $col) {
+	private function convert_xing_date_year_month($val, $table=NULL, $col=NULL) {
 		if (is_null($val)) {
 			return null;
 		} else {
@@ -330,7 +330,7 @@ class tx_dixxingsync_Data {
 			$table = trim($tbl, '.');
 			if ($table == 'fe_users') { continue; }
 			$sorting = $tblConf['sorting'] ? $tblConf['sorting'] : 'uid';
-			$where = sprintf('%s = %d %s', $GLOBALS['TYPO3_DB']->quoteStr($tblConf['userIDfield']), $GLOBALS["TSFE"]->fe_user->user['uid'], $GLOBALS['piObj']->cObj->enableFields($table));
+			$where = sprintf('%s = %d %s', $GLOBALS['TYPO3_DB']->quoteStr($tblConf['userIDfield'],$table), $GLOBALS["TSFE"]->fe_user->user['uid'], $GLOBALS['piObj']->cObj->enableFields($table));
 			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*', $table, $where, '', $sorting);
 			while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
 				$result[$table][] = $row;
