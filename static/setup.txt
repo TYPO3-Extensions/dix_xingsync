@@ -5,10 +5,11 @@ plugin.tx_dixxingsync_pi1 {
 		# table.convert.col = function
 		# example that would convert the value of city with the function "birth_date": fe_users.convert.city = xing_birthdate
 		
-		# convert beim parsen, convert_import erst beim import
+		# convert is used during parsing, convert_import is used only when data is imported
 		fe_users.convert_import.image = file
 		#fe_users.convert.image = file
 
+		#example for a 1:n relationship where tx_wmdbbamembercareer_training is the table with n-records
 #		tx_wmdbbamembercareer_training.userIDfield = user_id
 #		tx_wmdbbamembercareer_training.pid = 6
 #		tx_wmdbbamembercareer_training.sorting = begin_date DESC
