@@ -1,5 +1,6 @@
 plugin.tx_dixxingsync_pi1 {
 	requestProfileUrl = https://api.xing.com/v1/users/me
+	#ID of the page where the login form resides
 	loginPid = 21
 	tables {
 		# table.convert.col = function
@@ -9,28 +10,24 @@ plugin.tx_dixxingsync_pi1 {
 		fe_users.convert_import.image = file
 		#fe_users.convert.image = file
 
-		#example for a 1:n relationship where tx_wmdbbamembercareer_training is the table with n-records
-#		tx_wmdbbamembercareer_training.userIDfield = user_id
-#		tx_wmdbbamembercareer_training.pid = 6
-#		tx_wmdbbamembercareer_training.sorting = begin_date DESC
-#		tx_wmdbbamembercareer_experience.userIDfield = user_id
-#		tx_wmdbbamembercareer_experience.pid = 6
-#		tx_wmdbbamembercareer_experience.sorting = begin_date DESC
+		#example for a 1:n relationship where tx_wmdbbamembercareer_experience is the table with n-records
+		#	tx_wmdbbamembercareer_experience.userIDfield = user_id
+		#	tx_wmdbbamembercareer_experience.pid = 6
+		#	tx_wmdbbamembercareer_experience.sorting = begin_date DESC
 	}
 	map {
 		# xing_key = fe_users_key
 		first_name = first_name
-		# test unterebene 1:1
-		# time_zone.name = city
-		birth_date = city
-		photo_urls.large = image
-#		professional_experience.non_primary_companies = tx_wmdbbamembercareer_experience
-#		professional_experience.non_primary_companies.name = company
-#		professional_experience.non_primary_companies.url = company_site
+		last_name = last_name
+		active_email = email
+		# relation with sublevel
+		private_address.city = city
+		
+		#example for a 1:n related table
+		#	professional_experience.non_primary_companies = tx_wmdbbamembercareer_experience
+		#	professional_experience.non_primary_companies.name = company
+		#	professional_experience.non_primary_companies.url = company_site
 
-#		professional_experience.primary_company = tx_wmdbbamembercareer_experience
-#		professional_experience.primary_company.name = company
-#		professional_experience.primary_company.url = company_site
 
 	}
 
@@ -42,8 +39,8 @@ plugin.tx_dixxingsync_pi1 {
 		#debugging = true
 		pathToLanguageFile = typo3conf/ext/dix_xingsync/templates/ll_template.xml
 	}
-#	jsFile  = typo3conf/ext/dix_xingsync/script.js
-#	cssFile = typo3conf/ext/dix_xingsync/style.css
+	jsFile  = typo3conf/ext/dix_xingsync/script.js
+	cssFile = typo3conf/ext/dix_xingsync/style.css
 
 	_DEFAULT_PI_VARS	{
 	}

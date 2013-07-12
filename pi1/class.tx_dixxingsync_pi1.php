@@ -153,10 +153,8 @@ class tx_dixxingsync_Data {
 			foreach ($this->mappedData['foreign'][$table] as $j=>$data) {
 				foreach ($data as $col=>$val) {
 					$fn = $this->conf['tables.'][$table.'.']['convert.'][$col];
-					
 					if ($fn) { $fn = 'convert_'.$fn; }
 					if ($fn && method_exists($this, $fn)) {
-						
 						$this->mappedData['foreign'][$table][$j][$col] = call_user_func(array($this, $fn), $val);
 					}
 				}
@@ -174,7 +172,7 @@ class tx_dixxingsync_Data {
 	}
 	
 	/* Convert Xing Birthday fields into unix timestamp*/
-	private function convert_xing_birthdate($val, $table, $col) {
+	private function convert_xing_birthdate($val, $table = NULL, $col=NULL) {
 		$ts = mktime(0,0,0,$val['month'], $val['day'], $val['year']);
 		return $ts;
 	}
@@ -187,7 +185,7 @@ class tx_dixxingsync_Data {
 	}
 	
 	/* Convert the Xing Date given in format 2005-12 into a unix timestamp */
-	private function convert_xing_date_year_month($val, $table=NULL, $col=NULL) {
+	private function convert_xing_date_year_month($val, $table = NULL, $col=NULL) {
 		if (is_null($val)) {
 			return null;
 		} else {
@@ -238,12 +236,14 @@ class tx_dixxingsync_Data {
 				if ($map[$k.'.']) { // hat unterstrukturen in der mapping-konfiguration -> rekursiver aufruf
 					$this->mapData($map[$k.'.'], $data[$k], $map[$k]);
 				} else { // keine unterstrukturen. zuordnung 1:1 (fe_user) oder 1:n (fremdtabellen)
-					if ($table) { // 1:n zu $table
+					if ($table) { // 1:n to $table
 						if (!$data[0]) { $data = array($data); } // 1:n aus einer 1:1 beziehung machen -> primary_company
 						foreach ($data as $i=>$subdata) {
 							$this->mappedData['foreign'][$table][$i+$cnt][$map[$k]] = $subdata[$k];
 						}
 					} else { // 1:1 fe_users
+						// in rare cases you get an array, then the first element is used.
+						if (is_array($data[$k])) {$data[$k]=$data[$k][0];}
 						$this->mappedData['fe_users'][$map[$k]] = $data[$k];
 					}
 				}
@@ -266,7 +266,7 @@ class tx_dixxingsync_Data {
 			}
 		}
 
-		//feature: Schreibe in Network News, ist als Hook umgesetzt
+		
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['dix_xingsync']['hook_synclog'])) {
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['dix_xingsync']['hook_synclog'] as $_classRef) {
 				$_procObj = &t3lib_div::getUserObj($_classRef);
