@@ -1,3 +1,7 @@
+2013-07-12 Jan Schreier <Jan-Hendrik.Schreier@bits-iserlohn.de>
+
+	* Removed any local extensions which prevented this extension to work right out of the box
+
 2013-02-06  Markus Kappe  <markus.kappe@dix.at>
 
 	* Bugfixing based on feedback from Jan-Hendrik.Schreier@bits-iserlohn.de
