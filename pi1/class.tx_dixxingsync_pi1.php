@@ -97,7 +97,7 @@ class tx_dixxingsync_pi1 extends tslib_pibase {
 		$this->pi_loadLL();
 		$this->pi_USER_INT_obj=0; // 0 = cHash (caching with USER obj) ; 1 = never set cHash (no caching with USER_INT)
 		$GLOBALS['piObj'] = & $this;
-		$GLOBALS['debug'] = true; // disable after development finished
+		$GLOBALS['debug'] = false; // disable after development finished
 
 		session_start();
 		if ($GLOBALS['debug']) {
