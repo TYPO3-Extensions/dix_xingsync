@@ -36,7 +36,7 @@ class tx_dixxingsync_pi1 extends tslib_pibase {
 	public $prefixId      = 'tx_dixxingsync_pi1';		// Same as class name
 	public $scriptRelPath = 'pi1/class.tx_dixxingsync_pi1.php';	// Path to this script relative to the extension dir.
 	public $extKey        = 'dix_xingsync';	// The extension key.
-	public $pi_checkCHash = TRUE;
+	public $pi_checkCHash = FALSE;
 	
 	/**
 	 * The main method of the Plugin.
@@ -48,6 +48,7 @@ class tx_dixxingsync_pi1 extends tslib_pibase {
 	public function main($content, $conf) {
 		$this->init($conf);
 		$content = $this->doActions($this->piVars['action']);
+		$this->pi_USER_INT_obj = 1;
 		return $this->pi_wrapInBaseClass($content);
 	}
 
@@ -74,7 +75,6 @@ class tx_dixxingsync_pi1 extends tslib_pibase {
 
 	/* Zeige die potentiell zu importierten und die aktuellen Werte an*/
 	function makeIndex() {
-		
 		$data = t3lib_div::makeInstance('tx_dixxingsync_Data');
 		$data->init($this->conf);
 		$view = t3lib_div::makeInstance('tx_dixlib_View', $data);
@@ -194,6 +194,16 @@ class tx_dixxingsync_Data {
 		return $ts;
 	}
 	
+	/* Extract twitter username from $val if given as twitter.com/username and returns string in form @username*/
+	private function convert_twitter_user ($val, $table = NULL, $col=NULL) {
+		$suchmuster='#(https?)?(://)?(www.)?(twitter.com/)?[@]?([A-Za-z0-9_]{1,15})$#i';
+		preg_match($suchmuster, $val, $treffer);
+		if (isset($treffer[5])&&$treffer[5] != '') {
+			return '@'.$treffer[5];
+		} else { 
+			return '';
+		}
+	}
 	
 	private function convert_file($url, $table, $col) {
 		t3lib_div::loadTCA($table);
@@ -224,8 +234,7 @@ class tx_dixxingsync_Data {
 
 	/* Write data from Xing into local mappedData-Array */
 	private function mapData($map, $data, $table=null) { // rekursiv
-		static $cnt = 99;
-		$cnt++; // damit einträge in den arrays nicht überschrieben werden, wenn sie aus mehreren xing-teilstrukturen in eine typo3-tabelle zusammengeführt werden
+		$j=count($this->mappedData['foreign'][$table][$j])+1;
 		$keys = array();
 		if (is_array($map)) {
 			foreach ($map as $key => $value) {
@@ -239,7 +248,7 @@ class tx_dixxingsync_Data {
 					if ($table) { // 1:n to $table
 						if (!$data[0]) { $data = array($data); } // 1:n aus einer 1:1 beziehung machen -> primary_company
 						foreach ($data as $i=>$subdata) {
-							$this->mappedData['foreign'][$table][$i+$cnt][$map[$k]] = $subdata[$k];
+							$this->mappedData['foreign'][$table][$j+$i][$map[$k]] = $subdata[$k];
 						}
 					} else { // 1:1 fe_users
 						// in rare cases you get an array, then the first element is used.
@@ -266,7 +275,6 @@ class tx_dixxingsync_Data {
 			}
 		}
 
-		
 		if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['dix_xingsync']['hook_synclog'])) {
 			foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['dix_xingsync']['hook_synclog'] as $_classRef) {
 				$_procObj = &t3lib_div::getUserObj($_classRef);
