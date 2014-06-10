@@ -1,3 +1,7 @@
+2014-06-10  Markus Kappe  <markus.kappe@dix.at>
+
+	* (based upon the code of Jan) Bugfix: Es wurde bisher immer ein Job überschrieben
+
 2013-07-12 Jan Schreier <Jan-Hendrik.Schreier@bits-iserlohn.de>
 
 	* Removed any local extensions which prevented this extension to work right out of the box
